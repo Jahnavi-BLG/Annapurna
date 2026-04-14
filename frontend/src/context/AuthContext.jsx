@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const res = await axios.post('https://annapurna-o299.onrender.com/api/auth/login', { email, password });
       setToken(res.data.token);
       setUser(res.data.user);
       localStorage.setItem('token', res.data.token);
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', userData);
+      const res = await axios.post('https://annapurna-o299.onrender.com/api/auth/register', userData);
       setToken(res.data.token);
       setUser(res.data.user);
       localStorage.setItem('token', res.data.token);

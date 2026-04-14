@@ -18,8 +18,8 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       const [usersRes, donationsRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/users', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('http://localhost:5000/api/admin/donations', { headers: { Authorization: `Bearer ${token}` } })
+        axios.get('https://annapurna-o299.onrender.com/api/admin/users', { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get('https://annapurna-o299.onrender.com/api/admin/donations', { headers: { Authorization: `Bearer ${token}` } })
       ]);
       setUsers(usersRes.data);
       setDonations(donationsRes.data);
@@ -32,7 +32,7 @@ const AdminDashboard = () => {
 
   const updateStatus = async (id, status) => {
     try {
-      await axios.put(`http://localhost:5000/api/admin/users/${id}/status`, { status }, {
+      await axios.put(`https://annapurna-o299.onrender.com/api/admin/users/${id}/status`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Refresh the list
@@ -61,17 +61,17 @@ const AdminDashboard = () => {
       </div>
 
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden mb-8">
-        
+
         {/* TABS */}
         <div className="flex border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
-          <button 
-            onClick={() => setActiveTab('users')} 
+          <button
+            onClick={() => setActiveTab('users')}
             className={`flex items-center gap-2 px-6 py-4 font-bold text-sm transition-colors ${activeTab === 'users' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white dark:bg-slate-800' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
           >
             <Users size={18} /> Manage Users
           </button>
-          <button 
-            onClick={() => setActiveTab('donations')} 
+          <button
+            onClick={() => setActiveTab('donations')}
             className={`flex items-center gap-2 px-6 py-4 font-bold text-sm transition-colors ${activeTab === 'donations' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white dark:bg-slate-800' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
           >
             <Database size={18} /> View All Data (Posts)
@@ -110,9 +110,9 @@ const AdminDashboard = () => {
                       </td>
                       <td className="p-4 text-sm text-slate-600 dark:text-slate-400">{u.contact}</td>
                       <td className="p-4">
-                        {u.status === 'pending' && <span className="flex items-center gap-1 text-amber-600 text-sm font-semibold bg-amber-50 px-2 py-1 rounded-md w-max"><Clock size={14}/> Pending</span>}
-                        {u.status === 'approved' && <span className="flex items-center gap-1 text-emerald-600 text-sm font-semibold bg-emerald-50 px-2 py-1 rounded-md w-max"><UserCheck size={14}/> Approved</span>}
-                        {u.status === 'rejected' && <span className="flex items-center gap-1 text-red-600 text-sm font-semibold bg-red-50 px-2 py-1 rounded-md w-max"><UserX size={14}/> Rejected</span>}
+                        {u.status === 'pending' && <span className="flex items-center gap-1 text-amber-600 text-sm font-semibold bg-amber-50 px-2 py-1 rounded-md w-max"><Clock size={14} /> Pending</span>}
+                        {u.status === 'approved' && <span className="flex items-center gap-1 text-emerald-600 text-sm font-semibold bg-emerald-50 px-2 py-1 rounded-md w-max"><UserCheck size={14} /> Approved</span>}
+                        {u.status === 'rejected' && <span className="flex items-center gap-1 text-red-600 text-sm font-semibold bg-red-50 px-2 py-1 rounded-md w-max"><UserX size={14} /> Rejected</span>}
                       </td>
                       <td className="p-4 flex gap-2">
                         <button onClick={() => updateStatus(u._id, 'approved')} disabled={u.status === 'approved'} className="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed p-2 rounded-lg transition-colors" title="Approve">
@@ -151,7 +151,7 @@ const AdminDashboard = () => {
                       </td>
                       <td className="p-4 font-bold text-emerald-600">{d.quantity}</td>
                       <td className="p-4 text-sm text-slate-600 dark:text-slate-300">
-                        {d.donorId?.name || 'Anonymous'}<br/>
+                        {d.donorId?.name || 'Anonymous'}<br />
                         <span className="text-xs text-slate-400">{d.donorId?.contact || ''}</span>
                       </td>
                       <td className="p-4 text-sm text-slate-600 dark:text-slate-400 max-w-xs truncate" title={d.location?.address}>

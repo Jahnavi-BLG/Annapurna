@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, role, contact, location } = req.body;
-    
+
     // Check if user exists
     let user = await User.findOne({ email });
     if (user) {

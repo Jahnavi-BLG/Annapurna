@@ -7,7 +7,7 @@ const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(
-    localStorage.getItem('theme') === 'dark' || 
+    localStorage.getItem('theme') === 'dark' ||
     (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
   );
 
@@ -36,15 +36,15 @@ const Navbar = () => {
               Annapurna
             </Link>
           </div>
-          
+
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={() => setDarkMode(!darkMode)}
               className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300"
             >
               {darkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
-            
+
             {user ? (
               <div className="flex items-center gap-4">
                 <Link to={user.role === 'admin' ? '/admin' : user.role === 'donor' ? '/donor' : '/ngo'} className="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400">Dashboard</Link>

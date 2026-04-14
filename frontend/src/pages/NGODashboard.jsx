@@ -44,7 +44,7 @@ const NGODashboard = () => {
 
   const fetchDonations = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/donations?status=pending');
+      const res = await axios.get('https://annapurna-o299.onrender.com/api/donations?status=pending');
       setDonations(res.data);
     } catch (error) {
       console.error(error);
@@ -55,7 +55,7 @@ const NGODashboard = () => {
     if (e) e.stopPropagation();
     setClaimingId(donationId);
     try {
-      await axios.post('http://localhost:5000/api/claimFood', {
+      await axios.post('https://annapurna-o299.onrender.com/api/claimFood', {
         donationId,
         ngoId: user.id
       });
@@ -73,10 +73,10 @@ const NGODashboard = () => {
     const R = 6371; // Earth's radius in km
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
 
@@ -105,7 +105,7 @@ const NGODashboard = () => {
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Available Food Near You</h2>
         <div className="flex gap-2">
-          <button 
+          <button
             onClick={() => setSortByDistance(!sortByDistance)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${sortByDistance ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'}`}
           >
@@ -123,8 +123,8 @@ const NGODashboard = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortedDonations.map(don => (
-            <div 
-              key={don._id} 
+            <div
+              key={don._id}
               onClick={() => setSelectedDonation(don)}
               className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col pt-1 cursor-pointer hover:shadow-md hover:border-emerald-200 dark:hover:border-emerald-800 transition-all transform hover:-translate-y-1"
             >
@@ -136,7 +136,7 @@ const NGODashboard = () => {
                     {don.quantity} People
                   </span>
                 </div>
-                
+
                 <div className="space-y-2 mb-6">
                   <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                     <Clock size={16} className="text-slate-400" />
@@ -159,9 +159,9 @@ const NGODashboard = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
-                <button 
+                <button
                   onClick={(e) => claimFood(don._id, e)}
                   disabled={claimingId === don._id}
                   className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-400 text-white font-bold py-3 rounded-xl transition-all flex justify-center items-center gap-2"
@@ -200,7 +200,7 @@ const NGODashboard = () => {
                   <p className="text-slate-600 dark:text-slate-400 text-sm flex gap-2 items-center mt-2"><Info size={16} /> Expires: {new Date(selectedDonation.expiryTime).toLocaleString()}</p>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={(e) => claimFood(selectedDonation._id, e)}
                 disabled={claimingId === selectedDonation._id}
                 className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-400 text-white font-bold py-3 rounded-xl transition-all flex justify-center items-center gap-2"

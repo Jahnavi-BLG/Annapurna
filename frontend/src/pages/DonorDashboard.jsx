@@ -42,7 +42,7 @@ const DonorDashboard = () => {
 
   const fetchMyDonations = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/history/${user.id}`);
+      const res = await axios.get(`https://annapurna-o299.onrender.com/api/history/${user.id}`);
       setMyDonations(res.data.filter(d => d.status !== 'delivered')); // Active ones
     } catch (error) {
       console.error(error);
@@ -52,10 +52,10 @@ const DonorDashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!hygieneChecked) return alert('Please confirm food safety check.');
-    
+
     setLoading(true);
     try {
-      await axios.post('http://localhost:5000/api/donateFood', {
+      await axios.post('https://annapurna-o299.onrender.com/api/donateFood', {
         ...formData,
         location: {
           lat: coordinates.lat || 0,
@@ -94,43 +94,43 @@ const DonorDashboard = () => {
         <h2 className="text-2xl font-bold mb-6 text-slate-900 dark:text-white flex items-center gap-2">
           <CheckCircle className="text-emerald-500" /> Donate Food
         </h2>
-        
+
         {success && <div className="bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 p-4 rounded-xl mb-6 font-medium">Food donation posted successfully! Notifying nearby NGOs...</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Food Type/Description</label>
-              <input required type="text" placeholder="E.g. Rice and Curry" value={formData.foodType} onChange={e => setFormData({...formData, foodType: e.target.value})} className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
+              <input required type="text" placeholder="E.g. Rice and Curry" value={formData.foodType} onChange={e => setFormData({ ...formData, foodType: e.target.value })} className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Quantity (People)</label>
-              <input required type="number" min="1" placeholder="50" value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
+              <input required type="number" min="1" placeholder="50" value={formData.quantity} onChange={e => setFormData({ ...formData, quantity: e.target.value })} className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Expiry Date & Time</label>
-              <input required type="datetime-local" value={formData.expiryTime} onChange={e => setFormData({...formData, expiryTime: e.target.value})} className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
+              <input required type="datetime-local" value={formData.expiryTime} onChange={e => setFormData({ ...formData, expiryTime: e.target.value })} className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Pickup Window</label>
-              <input type="text" placeholder="2 PM - 5 PM" value={formData.pickupWindow} onChange={e => setFormData({...formData, pickupWindow: e.target.value})} className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
+              <input type="text" placeholder="2 PM - 5 PM" value={formData.pickupWindow} onChange={e => setFormData({ ...formData, pickupWindow: e.target.value })} className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
             </div>
           </div>
 
           <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl space-y-3 border border-slate-200 dark:border-slate-700">
             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">Location Settings</label>
             <div className="flex gap-4">
-              <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-600 dark:text-slate-400"><input type="radio" checked={formData.locationFormat === 'auto'} onChange={() => setFormData({...formData, locationFormat: 'auto'})} /> Auto Detect (GPS)</label>
-              <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-600 dark:text-slate-400"><input type="radio" checked={formData.locationFormat === 'manual'} onChange={() => setFormData({...formData, locationFormat: 'manual'})} /> Enter Manually</label>
+              <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-600 dark:text-slate-400"><input type="radio" checked={formData.locationFormat === 'auto'} onChange={() => setFormData({ ...formData, locationFormat: 'auto' })} /> Auto Detect (GPS)</label>
+              <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-600 dark:text-slate-400"><input type="radio" checked={formData.locationFormat === 'manual'} onChange={() => setFormData({ ...formData, locationFormat: 'manual' })} /> Enter Manually</label>
             </div>
             {formData.locationFormat === 'manual' && (
-              <input type="text" placeholder="Enter Full Address" value={formData.manualLocation} onChange={e => setFormData({...formData, manualLocation: e.target.value})} className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
+              <input type="text" placeholder="Enter Full Address" value={formData.manualLocation} onChange={e => setFormData({ ...formData, manualLocation: e.target.value })} className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
             )}
             {formData.locationFormat === 'auto' && coordinates.lat && (
-              <div className="text-xs text-emerald-600 flex items-center gap-1"><MapPin size={14}/> Location acquired</div>
+              <div className="text-xs text-emerald-600 flex items-center gap-1"><MapPin size={14} /> Location acquired</div>
             )}
           </div>
 
@@ -163,24 +163,24 @@ const DonorDashboard = () => {
                   {don.status.toUpperCase()}
                 </span>
               </div>
-              
+
               {/* Status Tracker UI */}
               <div className="relative pt-4">
                 <div className="absolute top-6 left-0 w-full h-1 bg-slate-200 dark:bg-slate-700 rounded-full z-0"></div>
                 {don.status !== 'pending' && <div className="absolute top-6 left-0 w-1/2 h-1 bg-emerald-500 rounded-full z-0"></div>}
                 {don.status === 'picked_up' && <div className="absolute top-6 left-0 w-full h-1 bg-emerald-500 rounded-full z-0"></div>}
-                
+
                 <div className="relative z-10 flex justify-between text-xs font-medium text-slate-500">
                   <div className="flex flex-col items-center gap-1">
-                    <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-white dark:border-slate-800"><CheckCircle size={12}/></div>
+                    <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-white dark:border-slate-800"><CheckCircle size={12} /></div>
                     Pending
                   </div>
                   <div className="flex flex-col items-center gap-1">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-800 transition-colors ${don.status !== 'pending' ? 'bg-emerald-500 text-white' : 'bg-slate-300 dark:bg-slate-600'}`}><Clock size={12}/></div>
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-800 transition-colors ${don.status !== 'pending' ? 'bg-emerald-500 text-white' : 'bg-slate-300 dark:bg-slate-600'}`}><Clock size={12} /></div>
                     Claimed
                   </div>
                   <div className="flex flex-col items-center gap-1">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-800 transition-colors ${don.status === 'picked_up' ? 'bg-emerald-500 text-white' : 'bg-slate-300 dark:bg-slate-600'}`}><Truck size={12}/></div>
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-800 transition-colors ${don.status === 'picked_up' ? 'bg-emerald-500 text-white' : 'bg-slate-300 dark:bg-slate-600'}`}><Truck size={12} /></div>
                     Picked Up
                   </div>
                 </div>

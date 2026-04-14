@@ -42,7 +42,7 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/annapurna'
 mongoose.connect(MONGO_URI)
   .then(async () => {
     console.log('Connected to MongoDB');
-    
+
     // Admin Seeding
     try {
       const adminExists = await User.findOne({ email: 'admin@annapurna.com' });
