@@ -4,12 +4,15 @@ import App from './App.jsx'
 import './index.css'
 import { AuthProvider } from './context/AuthContext'
 import { SocketProvider } from './context/SocketContext'
+import { NotificationProvider } from './context/NotificationContext'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
       <SocketProvider>
-        <App />
+        <NotificationProvider>
+          <App />
+        </NotificationProvider>
       </SocketProvider>
     </AuthProvider>
   </React.StrictMode>,

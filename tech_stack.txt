@@ -1,0 +1,41 @@
+# Annapurna Application Tech Stack
+
+Annapurna is a full-stack web application designed to connect Food Donors with nearby NGOs. It is built as a highly responsive, modern Single Page Application (SPA).
+
+## Architecture
+The application runs on a classic MERN stack architecture representing:
+- **M**ongoDB (Database)
+- **E**xpress.js (Backend Framework)
+- **R**eact.js (Frontend Library)
+- **N**ode.js (Runtime Environment)
+
+## Frontend
+1. **Language:** JavaScript (ES6+), JSX
+2. **Framework:** React.js (v19)
+3. **Build Tool:** Vite (for faster Hot Module Replacement and optimized production builds)
+4. **Styling:** Tailwind CSS (utility-first CSS framework prioritizing a responsive, modern glass/flat aesthetic)
+5. **Icons:** Lucide React
+6. **Routing:** React Router DOM (v7)
+7. **HTTP Client:** Axios (for connecting to the REST APIs)
+8. **Real-time Engine:** Socket.IO Client (listens for instant real-time broadcasts when donations are posted or fulfilled)
+
+## Backend
+1. **Language:** JavaScript (ES6+)
+2. **Runtime:** Node.js
+3. **Server Framework:** Express.js 
+4. **Database ORM:** Mongoose (handles schemas, data validation, and queries)
+5. **Authentication:** 
+    - JWT (JSON Web Tokens) for managing stateless authentication
+    - bcrypt.js for secure password hashing and salting before DB insertion
+6. **Real-time Engine:** Socket.IO (maintains connection states and broadcasts push notifications)
+
+## Database
+1. **Engine:** MongoDB (NoSQL Database)
+2. **Features used:**
+    - Document-based collections perfectly aligning with JSON data
+    - **TTL (Time-To-Live) Indexes**: Automatically handles permanent account deletions 30 days after a user sets their profile to inactive.
+
+## Feature Logic Summary
+1. **Profile Management:** Utilizes a secure update methodology that restricts modifications only to authorized fields (contact, address, GPS) while locking Name and Email. Account deletion effectively triggers a soft-delete mechanism supported by MongoDB TTL.
+2. **Distance Calculation:** We employ the Haversine equation in the frontend. When a donor attempts to post a donation, we quickly pull the list of live NGOs and compute the spherical distance to trigger intelligent warnings ("No NGOs within 50km" or "Nearest NGO is 12 mins away").
+3. **Real-time Notifications:** Leveraging Socket.io, when the backend updates a donation status, it emits an event causing relevant dashboards to update their states silently, skipping large page reloads.

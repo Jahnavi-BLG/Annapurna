@@ -7,8 +7,8 @@ const DonationSchema = new mongoose.Schema({
   expiryTime: { type: Date, required: true },
   pickupWindow: { type: String }, // e.g., "7:00 PM - 9:00 PM"
   location: {
-    lat: { type: Number, required: true },
-    lng: { type: Number, required: true },
+    lat: { type: Number },
+    lng: { type: Number },
     address: { type: String }
   },
   donorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

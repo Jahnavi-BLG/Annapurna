@@ -9,7 +9,7 @@ export const SocketProvider = ({ children }) => {
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    const newSocket = io('https://annapurna-o299.onrender.com');
+    const newSocket = io('http://localhost:5000');
     setSocket(newSocket);
 
     return () => newSocket.close();

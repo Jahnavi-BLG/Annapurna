@@ -1,5 +1,7 @@
 const express = require('express');
 const Donation = require('../models/Donation');
+const User = require('../models/User');
+const Notification = require('../models/Notification');
 const router = express.Router();
 
 // Middleware to inject io if possible or we can pass io to router
@@ -17,6 +19,17 @@ router.post('/donateFood', async (req, res) => {
 
     // Populate donor details for notification
     await donation.populate('donorId', 'name contact');
+
+    // Create notifications for all active NGOs
+    const activeNgos = await User.find({ role: 'ngo', status: 'approved' });
+    const notificationPromises = activeNgos.map(ngo => {
+      return new Notification({
+        userId: ngo._id,
+        type: 'new_donation',
+        message: `New Food Available: ${quantity} servings of ${foodType} from ${donation.donorId.name}!`
+      }).save();
+    });
+    await Promise.all(notificationPromises);
 
     // Emit real-time event to all connected clients
     const io = req.app.get('io');
@@ -56,6 +69,12 @@ router.post('/claimFood', async (req, res) => {
     await donation.populate('claimedBy', 'name contact');
 
     // Notify the donor
+    await new Notification({
+      userId: donation.donorId,
+      type: 'donation_claimed',
+      message: `Your donation of ${donation.foodType} was claimed by ${donation.claimedBy.name}!`
+    }).save();
+
     const io = req.app.get('io');
     if (io) {
       io.emit('donation_updated', donation);
@@ -78,6 +97,14 @@ router.put('/updateStatus', async (req, res) => {
       donation.deliveredAt = new Date();
     }
     await donation.save();
+
+    if (status === 'picked_up' || status === 'delivered') {
+      await new Notification({
+        userId: donation.donorId,
+        type: `donation_${status}`,
+        message: `Your donation of ${donation.foodType} has been marked as ${status.replace('_', ' ')}!`
+      }).save();
+    }
 
     const io = req.app.get('io');
     if (io) {

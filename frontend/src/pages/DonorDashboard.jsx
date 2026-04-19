@@ -21,13 +21,24 @@ const DonorDashboard = () => {
   const [success, setSuccess] = useState(false);
   const [myDonations, setMyDonations] = useState([]);
 
-  useEffect(() => {
+  const detectLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => setCoordinates({ lat: position.coords.latitude, lng: position.coords.longitude }),
-        (err) => console.log(err)
+        (position) => {
+          setCoordinates({ lat: position.coords.latitude, lng: position.coords.longitude });
+        },
+        (err) => {
+          console.error(err);
+          window.alert('Failed to get location automatically. Please check browser permissions or enter manually.');
+        }
       );
+    } else {
+      window.alert('Geolocation is not supported by your browser.');
     }
+  };
+
+  useEffect(() => {
+    detectLocation();
     fetchMyDonations();
 
     if (socket) {
@@ -42,7 +53,7 @@ const DonorDashboard = () => {
 
   const fetchMyDonations = async () => {
     try {
-      const res = await axios.get(`https://annapurna-o299.onrender.com/api/history/${user.id}`);
+      const res = await axios.get(`http://localhost:5000/api/history/${user.id}`);
       setMyDonations(res.data.filter(d => d.status !== 'delivered')); // Active ones
     } catch (error) {
       console.error(error);
@@ -51,15 +62,25 @@ const DonorDashboard = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!hygieneChecked) return alert('Please confirm food safety check.');
+    if (!hygieneChecked) return window.alert('Please confirm food safety check.');
+
+    if (formData.locationFormat === 'auto' && !coordinates.lat) {
+      return window.alert('GPS Location not acquired. Please allow location access or enter address manually.');
+    }
+    if (formData.locationFormat === 'manual' && !formData.manualLocation.trim()) {
+      return window.alert('Please enter a valid manual address.');
+    }
 
     setLoading(true);
     try {
-      await axios.post('https://annapurna-o299.onrender.com/api/donateFood', {
+      const donorLat = formData.locationFormat === 'auto' ? coordinates.lat : null;
+      const donorLng = formData.locationFormat === 'auto' ? coordinates.lng : null;
+
+      await axios.post('http://localhost:5000/api/donateFood', {
         ...formData,
         location: {
-          lat: coordinates.lat || 0,
-          lng: coordinates.lng || 0,
+          lat: donorLat,
+          lng: donorLng,
           address: formData.manualLocation
         },
         donorId: user.id
@@ -70,7 +91,7 @@ const DonorDashboard = () => {
       setFormData({ ...formData, foodType: '', quantity: '', expiryTime: '', pickupWindow: '' });
       setHygieneChecked(false);
     } catch (error) {
-      alert('Error donating food');
+      window.alert('Error donating food: Maybe NGOs list unavailable or server issue.');
     }
     setLoading(false);
   };
@@ -122,15 +143,26 @@ const DonorDashboard = () => {
 
           <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl space-y-3 border border-slate-200 dark:border-slate-700">
             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">Location Settings</label>
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
               <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-600 dark:text-slate-400"><input type="radio" checked={formData.locationFormat === 'auto'} onChange={() => setFormData({ ...formData, locationFormat: 'auto' })} /> Auto Detect (GPS)</label>
               <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-600 dark:text-slate-400"><input type="radio" checked={formData.locationFormat === 'manual'} onChange={() => setFormData({ ...formData, locationFormat: 'manual' })} /> Enter Manually</label>
             </div>
+            
+            {formData.locationFormat === 'auto' && (
+              <div className="flex flex-col gap-2">
+                <button type="button" onClick={detectLocation} className="text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 py-1 px-3 rounded w-fit transition-colors">
+                  Force Detect GPS Location
+                </button>
+                {coordinates.lat ? (
+                  <div className="text-xs text-emerald-600 flex items-center gap-1"><MapPin size={14} /> Location acquired</div>
+                ) : (
+                  <div className="text-xs text-red-500">Location not yet acquired. Please click above or allow permissions.</div>
+                )}
+              </div>
+            )}
+
             {formData.locationFormat === 'manual' && (
               <input type="text" placeholder="Enter Full Address" value={formData.manualLocation} onChange={e => setFormData({ ...formData, manualLocation: e.target.value })} className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white" />
-            )}
-            {formData.locationFormat === 'auto' && coordinates.lat && (
-              <div className="text-xs text-emerald-600 flex items-center gap-1"><MapPin size={14} /> Location acquired</div>
             )}
           </div>
 

@@ -7,6 +7,7 @@ import DonorDashboard from './pages/DonorDashboard';
 import NGODashboard from './pages/NGODashboard';
 import History from './pages/History';
 import AdminDashboard from './pages/AdminDashboard';
+import ProfileDashboard from './pages/ProfileDashboard';
 import { AuthContext } from './context/AuthContext';
 import { SocketContext } from './context/SocketContext';
 
@@ -42,6 +43,7 @@ function App() {
             <Route path="/ngo" element={user && user.role === 'ngo' ? <NGODashboard /> : <Navigate to="/auth" />} />
             <Route path="/admin" element={user && user.role === 'admin' ? <AdminDashboard /> : <Navigate to="/auth" />} />
             <Route path="/history" element={user ? <History /> : <Navigate to="/auth" />} />
+            <Route path="/profile" element={user ? <ProfileDashboard /> : <Navigate to="/auth" />} />
           </Routes>
         </main>
       </div>

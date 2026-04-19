@@ -10,13 +10,14 @@ const User = require('./models/User');
 const authRoutes = require('./routes/auth.routes');
 const donationRoutes = require('./routes/donation.routes');
 const adminRoutes = require('./routes/admin.routes');
+const notificationRoutes = require('./routes/notification.routes');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: '*',
-    methods: ['GET', 'POST', 'PUT']
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
   }
 });
 
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api', donationRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);

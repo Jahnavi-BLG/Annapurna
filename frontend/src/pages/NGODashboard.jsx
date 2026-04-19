@@ -44,7 +44,7 @@ const NGODashboard = () => {
 
   const fetchDonations = async () => {
     try {
-      const res = await axios.get('https://annapurna-o299.onrender.com/api/donations?status=pending');
+      const res = await axios.get('http://localhost:5000/api/donations?status=pending');
       setDonations(res.data);
     } catch (error) {
       console.error(error);
@@ -55,7 +55,7 @@ const NGODashboard = () => {
     if (e) e.stopPropagation();
     setClaimingId(donationId);
     try {
-      await axios.post('https://annapurna-o299.onrender.com/api/claimFood', {
+      await axios.post('http://localhost:5000/api/claimFood', {
         donationId,
         ngoId: user.id
       });
@@ -138,20 +138,49 @@ const NGODashboard = () => {
                 </div>
 
                 <div className="space-y-2 mb-6">
-                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                    <Clock size={16} className="text-slate-400" />
-                    <span>Exp: <strong>{new Date(don.expiryTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong></span>
+                  <div className="flex justify-between items-center text-sm text-slate-600 dark:text-slate-400">
+                    <div className="flex items-center gap-2">
+                      <Clock size={16} className="text-slate-400" />
+                      <span>Exp: <strong>{new Date(don.expiryTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong></span>
+                    </div>
+                    {/* Urgency Indicator */}
+                    {((new Date(don.expiryTime) - new Date()) / (1000 * 60) < 120) && (
+                      <span className="text-xs font-bold text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-0.5 rounded animate-pulse">URGENT</span>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                    <MapPin size={16} className="shrink-0 text-slate-400" />
-                    <span className="truncate">
-                      {don.location?.address || 'Location Hidden'}
-                      {coordinates.lat && don.location?.lat && (
-                        <span className="font-semibold text-emerald-600 dark:text-emerald-400 ml-1">
-                          ({getDistance(coordinates.lat, coordinates.lng, don.location.lat, don.location.lng).toFixed(1)} km)
-                        </span>
-                      )}
-                    </span>
+                  <div className="flex flex-col gap-2 mt-3">
+                    <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                      <MapPin size={16} className="shrink-0 text-slate-400" />
+                      <span className="truncate font-medium text-slate-700 dark:text-slate-300">
+                        {don.location?.address || 'Location: GPS Coordinates Provided'}
+                        {coordinates.lat && don.location?.lat ? (
+                          <span className="font-semibold text-emerald-600 dark:text-emerald-400 ml-2">
+                            ({getDistance(coordinates.lat, coordinates.lng, don.location.lat, don.location.lng) < 1 ? '< 1' : getDistance(coordinates.lat, coordinates.lng, don.location.lat, don.location.lng).toFixed(1)} km away)
+                          </span>
+                        ) : null}
+                      </span>
+                    </div>
+                    {don.location?.lat && don.location?.lng ? (
+                      <a 
+                        href={`https://www.google.com/maps?q=${don.location.lat},${don.location.lng}`} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 dark:text-blue-400 py-2 rounded-lg text-sm font-bold transition-colors flex justify-center items-center gap-2 border border-blue-200 dark:border-blue-800"
+                      >
+                        <Navigation size={16} /> Open in Google Maps
+                      </a>
+                    ) : don.location?.address ? (
+                      <a 
+                        href={`https://www.google.com/maps?q=${encodeURIComponent(don.location.address)}`} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 dark:text-blue-400 py-2 rounded-lg text-sm font-bold transition-colors flex justify-center items-center gap-2 border border-blue-200 dark:border-blue-800"
+                      >
+                        <Navigation size={16} /> Search on Google Maps
+                      </a>
+                    ) : null}
                   </div>
                   <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                     <Package size={16} className="text-slate-400" />
@@ -194,10 +223,36 @@ const NGODashboard = () => {
                   <p className="text-slate-600 dark:text-slate-400 text-sm">Contact: {selectedDonation.donorId?.contact || 'N/A'}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-slate-700 dark:text-slate-300 text-sm uppercase tracking-wide mb-1">Pickup Details</h4>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm flex gap-2 items-start"><MapPin size={16} className="mt-0.5 shrink-0" /> {selectedDonation.location?.address || 'GPS Coordinates Provided'}</p>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm flex gap-2 items-center mt-2"><Clock size={16} /> Window: {selectedDonation.pickupWindow || 'Anytime before expiry'}</p>
-                  <p className="text-slate-600 dark:text-slate-400 text-sm flex gap-2 items-center mt-2"><Info size={16} /> Expires: {new Date(selectedDonation.expiryTime).toLocaleString()}</p>
+                  <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <h4 className="font-semibold text-slate-700 dark:text-slate-300 text-sm uppercase tracking-wide mb-2">Pickup Details</h4>
+                    <p className="text-slate-700 dark:text-slate-300 font-medium text-sm flex gap-2 items-start mb-3">
+                      <MapPin size={16} className="mt-0.5 shrink-0 text-slate-400" /> 
+                      {selectedDonation.location?.address || 'GPS Coordinates Provided - Open map to view exact location'}
+                    </p>
+                    
+                    {selectedDonation.location?.lat && selectedDonation.location?.lng ? (
+                      <a 
+                        href={`https://www.google.com/maps?q=${selectedDonation.location.lat},${selectedDonation.location.lng}`} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl text-sm font-bold transition-all flex justify-center items-center gap-2 shadow-sm mb-4"
+                      >
+                        <Navigation size={18} /> OPEN IN GOOGLE MAPS
+                      </a>
+                    ) : selectedDonation.location?.address ? (
+                      <a 
+                        href={`https://www.google.com/maps?q=${encodeURIComponent(selectedDonation.location.address)}`} 
+                        target="_blank" 
+                        rel="noreferrer"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl text-sm font-bold transition-all flex justify-center items-center gap-2 shadow-sm mb-4"
+                      >
+                        <Navigation size={18} /> SEARCH ON GOOGLE MAPS
+                      </a>
+                    ) : null}
+
+                    <p className="text-slate-600 dark:text-slate-400 text-sm flex gap-2 items-center mt-2 pt-2 border-t border-slate-200 dark:border-slate-700"><Clock size={16} /> Window: {selectedDonation.pickupWindow || 'Anytime before expiry'}</p>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm flex gap-2 items-center mt-2"><Info size={16} /> Expires: {new Date(selectedDonation.expiryTime).toLocaleString()}</p>
+                  </div>
                 </div>
               </div>
               <button
