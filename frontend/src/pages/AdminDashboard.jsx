@@ -18,8 +18,8 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       const [usersRes, donationsRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/users', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('http://localhost:5000/api/admin/donations', { headers: { Authorization: `Bearer ${token}` } })
+        axios.get('https://annapurna-o299.onrender.com/api/admin/users', { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get('https://annapurna-o299.onrender.com/api/admin/donations', { headers: { Authorization: `Bearer ${token}` } })
       ]);
       setUsers(usersRes.data);
       setDonations(donationsRes.data);
@@ -32,7 +32,7 @@ const AdminDashboard = () => {
 
   const updateStatus = async (id, status) => {
     try {
-      await axios.put(`http://localhost:5000/api/admin/users/${id}/status`, { status }, {
+      await axios.put(`https://annapurna-o299.onrender.com/api/admin/users/${id}/status`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Refresh the list

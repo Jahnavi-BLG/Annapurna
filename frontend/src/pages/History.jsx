@@ -15,7 +15,7 @@ const History = () => {
   const fetchHistory = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/history/${user.id}`);
+      const res = await axios.get(`https://annapurna-o299.onrender.com/api/history/${user.id}`);
       setHistory(res.data);
     } catch (error) {
       console.error(error);
@@ -25,7 +25,7 @@ const History = () => {
 
   const updateStatus = async (donationId, newStatus) => {
     try {
-      await axios.put('http://localhost:5000/api/updateStatus', {
+      await axios.put('https://annapurna-o299.onrender.com/api/updateStatus', {
         donationId,
         status: newStatus
       });

@@ -49,7 +49,7 @@ Annapurna is a robust full-stack web application designed to connect food donors
 ### Accessing the App
 
 - Application runs at: `http://localhost:5173`
-- Backend API runs at: `http://localhost:5000`
+- Backend API runs at: `https://annapurna-o299.onrender.com`
 
 ### Admin Panel
 - Navigate to `/admin` route or select "Admin" during login.

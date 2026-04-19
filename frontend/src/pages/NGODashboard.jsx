@@ -44,7 +44,7 @@ const NGODashboard = () => {
 
   const fetchDonations = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/donations?status=pending');
+      const res = await axios.get('https://annapurna-o299.onrender.com/api/donations?status=pending');
       setDonations(res.data);
     } catch (error) {
       console.error(error);
@@ -55,7 +55,7 @@ const NGODashboard = () => {
     if (e) e.stopPropagation();
     setClaimingId(donationId);
     try {
-      await axios.post('http://localhost:5000/api/claimFood', {
+      await axios.post('https://annapurna-o299.onrender.com/api/claimFood', {
         donationId,
         ngoId: user.id
       });
@@ -161,9 +161,9 @@ const NGODashboard = () => {
                       </span>
                     </div>
                     {don.location?.lat && don.location?.lng ? (
-                      <a 
-                        href={`https://www.google.com/maps?q=${don.location.lat},${don.location.lng}`} 
-                        target="_blank" 
+                      <a
+                        href={`https://www.google.com/maps?q=${don.location.lat},${don.location.lng}`}
+                        target="_blank"
                         rel="noreferrer"
                         onClick={(e) => e.stopPropagation()}
                         className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 dark:text-blue-400 py-2 rounded-lg text-sm font-bold transition-colors flex justify-center items-center gap-2 border border-blue-200 dark:border-blue-800"
@@ -171,9 +171,9 @@ const NGODashboard = () => {
                         <Navigation size={16} /> Open in Google Maps
                       </a>
                     ) : don.location?.address ? (
-                      <a 
-                        href={`https://www.google.com/maps?q=${encodeURIComponent(don.location.address)}`} 
-                        target="_blank" 
+                      <a
+                        href={`https://www.google.com/maps?q=${encodeURIComponent(don.location.address)}`}
+                        target="_blank"
                         rel="noreferrer"
                         onClick={(e) => e.stopPropagation()}
                         className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 dark:text-blue-400 py-2 rounded-lg text-sm font-bold transition-colors flex justify-center items-center gap-2 border border-blue-200 dark:border-blue-800"
@@ -226,23 +226,23 @@ const NGODashboard = () => {
                   <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
                     <h4 className="font-semibold text-slate-700 dark:text-slate-300 text-sm uppercase tracking-wide mb-2">Pickup Details</h4>
                     <p className="text-slate-700 dark:text-slate-300 font-medium text-sm flex gap-2 items-start mb-3">
-                      <MapPin size={16} className="mt-0.5 shrink-0 text-slate-400" /> 
+                      <MapPin size={16} className="mt-0.5 shrink-0 text-slate-400" />
                       {selectedDonation.location?.address || 'GPS Coordinates Provided - Open map to view exact location'}
                     </p>
-                    
+
                     {selectedDonation.location?.lat && selectedDonation.location?.lng ? (
-                      <a 
-                        href={`https://www.google.com/maps?q=${selectedDonation.location.lat},${selectedDonation.location.lng}`} 
-                        target="_blank" 
+                      <a
+                        href={`https://www.google.com/maps?q=${selectedDonation.location.lat},${selectedDonation.location.lng}`}
+                        target="_blank"
                         rel="noreferrer"
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl text-sm font-bold transition-all flex justify-center items-center gap-2 shadow-sm mb-4"
                       >
                         <Navigation size={18} /> OPEN IN GOOGLE MAPS
                       </a>
                     ) : selectedDonation.location?.address ? (
-                      <a 
-                        href={`https://www.google.com/maps?q=${encodeURIComponent(selectedDonation.location.address)}`} 
-                        target="_blank" 
+                      <a
+                        href={`https://www.google.com/maps?q=${encodeURIComponent(selectedDonation.location.address)}`}
+                        target="_blank"
                         rel="noreferrer"
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl text-sm font-bold transition-all flex justify-center items-center gap-2 shadow-sm mb-4"
                       >

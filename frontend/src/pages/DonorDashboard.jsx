@@ -53,7 +53,7 @@ const DonorDashboard = () => {
 
   const fetchMyDonations = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/history/${user.id}`);
+      const res = await axios.get(`https://annapurna-o299.onrender.com/api/history/${user.id}`);
       setMyDonations(res.data.filter(d => d.status !== 'delivered')); // Active ones
     } catch (error) {
       console.error(error);
@@ -76,7 +76,7 @@ const DonorDashboard = () => {
       const donorLat = formData.locationFormat === 'auto' ? coordinates.lat : null;
       const donorLng = formData.locationFormat === 'auto' ? coordinates.lng : null;
 
-      await axios.post('http://localhost:5000/api/donateFood', {
+      await axios.post('https://annapurna-o299.onrender.com/api/donateFood', {
         ...formData,
         location: {
           lat: donorLat,
@@ -147,7 +147,7 @@ const DonorDashboard = () => {
               <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-600 dark:text-slate-400"><input type="radio" checked={formData.locationFormat === 'auto'} onChange={() => setFormData({ ...formData, locationFormat: 'auto' })} /> Auto Detect (GPS)</label>
               <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-600 dark:text-slate-400"><input type="radio" checked={formData.locationFormat === 'manual'} onChange={() => setFormData({ ...formData, locationFormat: 'manual' })} /> Enter Manually</label>
             </div>
-            
+
             {formData.locationFormat === 'auto' && (
               <div className="flex flex-col gap-2">
                 <button type="button" onClick={detectLocation} className="text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 py-1 px-3 rounded w-fit transition-colors">

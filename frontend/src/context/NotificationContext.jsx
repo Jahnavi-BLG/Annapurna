@@ -14,7 +14,7 @@ export const NotificationProvider = ({ children }) => {
   const fetchNotifications = async () => {
     if (user) {
       try {
-        const res = await fetch(`http://localhost:5000/api/notifications/${user.id}`);
+        const res = await fetch(`https://annapurna-o299.onrender.com/api/notifications/${user.id}`);
         const data = await res.json();
         setNotifications(data);
         setUnreadCount(data.filter(n => !n.read).length);
@@ -86,18 +86,18 @@ export const NotificationProvider = ({ children }) => {
 
   const markAllAsRead = async () => {
     try {
-      if (user) await fetch(`http://localhost:5000/api/notifications/mark-read/${user.id}`, { method: 'PUT' });
-      setNotifications(prev => prev.map(n => ({...n, read: true})));
+      if (user) await fetch(`https://annapurna-o299.onrender.com/api/notifications/mark-read/${user.id}`, { method: 'PUT' });
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
       setUnreadCount(0);
-    } catch(err) {}
+    } catch (err) { }
   };
 
   const clearNotifications = async () => {
     try {
-      if (user) await fetch(`http://localhost:5000/api/notifications/clear/${user.id}`, { method: 'DELETE' });
+      if (user) await fetch(`https://annapurna-o299.onrender.com/api/notifications/clear/${user.id}`, { method: 'DELETE' });
       setNotifications([]);
       setUnreadCount(0);
-    } catch(err) {}
+    } catch (err) { }
   };
 
   return (

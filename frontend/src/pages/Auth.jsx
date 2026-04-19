@@ -55,7 +55,7 @@ const Auth = () => {
     setLoading(true);
 
     const res = await forgotPassword(forgotPasswordData.email, forgotPasswordData.contact, forgotPasswordData.newPassword);
-    
+
     if (res.success) {
       setResetSuccess('Password reset successful! Please login.');
       setTimeout(() => {
@@ -151,12 +151,12 @@ const Auth = () => {
                 <option value="ngo">NGO / Recipient</option>
               </select>
             </div>
-            
+
             {formData.role === 'ngo' && (
               <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-sm space-y-3">
                 <label className="block font-semibold text-slate-700 dark:text-slate-300">NGO Location Details</label>
                 <p className="text-slate-500 text-xs">Help donors find you either by precise GPS or manual address.</p>
-                
+
                 <div className="flex gap-4 mb-2">
                   <label className="flex items-center gap-2 cursor-pointer text-sm text-slate-600 dark:text-slate-400">
                     <input type="radio" checked={formData.locationFormat === 'manual'} onChange={() => setFormData({ ...formData, locationFormat: 'manual' })} /> Enter Manually
@@ -167,21 +167,21 @@ const Auth = () => {
                 </div>
 
                 {formData.locationFormat === 'manual' ? (
-                  <input 
-                    type="text" 
-                    placeholder="Enter Full NGO Address" 
-                    value={formData.manualAddress} 
-                    onChange={e => setFormData({ ...formData, manualAddress: e.target.value })} 
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white" 
+                  <input
+                    type="text"
+                    placeholder="Enter Full NGO Address"
+                    value={formData.manualAddress}
+                    onChange={e => setFormData({ ...formData, manualAddress: e.target.value })}
+                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                   />
                 ) : (
                   <div>
-                    <button 
+                    <button
                       type="button"
                       onClick={() => {
                         if (navigator.geolocation) {
                           navigator.geolocation.getCurrentPosition(
-                            (position) => setFormData(prev => ({ ...prev, location: { lat: position.coords.latitude, lng: position.coords.longitude }})),
+                            (position) => setFormData(prev => ({ ...prev, location: { lat: position.coords.latitude, lng: position.coords.longitude } })),
                             (err) => alert('GPS disabled or blocked. Please allow location permissions in your browser.')
                           );
                         } else {
